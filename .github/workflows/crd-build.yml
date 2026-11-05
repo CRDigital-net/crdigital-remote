@@ -1,0 +1,14 @@
+name: CRDigital Remote bauen
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+jobs:
+  windows:
+    uses: ./.github/workflows/flutter-build.yml
+    secrets: inherit
+    with:
+      upload-artifact: true
+      upload-tag: ${{ github.ref_type == 'tag' && github.ref_name || 'latest' }}
