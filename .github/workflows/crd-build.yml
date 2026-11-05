@@ -5,6 +5,9 @@ on:
   push:
     tags: ["v*"]
 
+permissions:
+  contents: write
+
 jobs:
   windows:
     uses: ./.github/workflows/flutter-build.yml
@@ -12,3 +15,20 @@ jobs:
     with:
       upload-artifact: true
       upload-tag: ${{ github.ref_type == 'tag' && github.ref_name || 'latest' }}
+
+  feste-dateinamen:
+    name: Feste Download-Namen
+    needs: windows
+    runs-on: ubuntu-22.04
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: ${{ github.ref_type == 'tag' && github.ref_name || 'latest' }}
+    steps:
+      - name: Dateien umbenennen und hochladen
+        run: |
+          mkdir dl && cd dl
+          gh release download "$TAG" -R "$GITHUB_REPOSITORY" -p 'rustdesk-*-x86_64.exe' -p 'rustdesk-*-x86_64.msi'
+          cp rustdesk-*-x86_64.exe CRDigitalRemote-Support.exe
+          cp rustdesk-*-x86_64.msi CRDigitalRemote-Setup.msi
+          gh release upload "$TAG" -R "$GITHUB_REPOSITORY" --clobber CRDigitalRemote-Support.exe CRDigitalRemote-Setup.msi
+          gh release edit "$TAG" -R "$GITHUB_REPOSITORY" --title "CRDigital Remote ($TAG)"

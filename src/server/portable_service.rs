@@ -850,6 +850,8 @@ pub mod client {
         let app_exe = format!("{}.exe", crate::get_app_name().to_lowercase());
         !crate::platform::get_pids_of_process_with_first_arg(&app_exe, "--portable-service")
             .is_empty()
+            || !crate::platform::get_pids_of_process_with_first_arg("rustdesk.exe", "--portable-service")
+                .is_empty()
     }
 
     #[inline]

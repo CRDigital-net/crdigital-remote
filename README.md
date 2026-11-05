@@ -17,6 +17,8 @@ CRDigital Remote ist die Fernwartungslösung von [CRDigital](https://cr-digital.
 | `server/` | Docker Compose für den Vermittlungs- und Relay-Server |
 | `branding/` | Logo, Icons und Wortmarke (Quelldateien als SVG) |
 | `.github/workflows/crd-build.yml` | Baut den Windows-Client (x64) |
+| `integration/` | Fernwartungs-Button für alle CRDigital-Anwendungen (eine Zeile HTML) |
+| `web/support/` | Support-Seite für cr-digital.net |
 | übrige Ordner | Quellcode des Clients (basiert auf RustDesk) |
 
 ## 1. Server einrichten
@@ -46,7 +48,7 @@ DNS: A-Record `remote.cr-digital.net` auf die öffentliche IP.
 
 1. Unter *Settings → Secrets and variables → Actions* das Secret **`CRD_KEY`** anlegen, Inhalt = `id_ed25519.pub`.
 2. Unter *Actions → „CRDigital Remote bauen“ → Run workflow* den Build starten (Dauer ca. 45–60 Minuten).
-3. Ergebnis: Release **`latest`** mit EXE und MSI. Für feste Versionen ein Tag `v1.0.0` pushen.
+3. Ergebnis: Release **`latest`** mit `CRDigitalRemote-Support.exe` und `CRDigitalRemote-Setup.msi` unter festen Links. Für feste Versionen ein Tag `v1.0.0` pushen.
 
 Ohne gesetztes Secret bricht der Build bewusst ab, damit kein Client ohne gültigen Schlüssel entsteht.
 

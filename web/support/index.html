@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Support – CRDigital</title>
+<meta name="description" content="Support von CRDigital: Fernwartung, Störungsmeldung, Anleitungen und Downloads.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="crd-remote-support.js" defer></script>
+<style>
+  :root{
+    --navy:#0B2545; --navy-2:#13315C; --blue:#1F5FAD; --blue-h:#184C8C; --blue-soft:#EAF1FA;
+    --silver:#C9D1DB; --ink:#0B2545; --muted:#5A6B82; --bg:#F5F7FA; --card:#FFFFFF; --line:#E3E8EF;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#E8EDF4; --muted:#A3B0C2; --bg:#0E1520; --card:#152031; --line:#253246; --blue-soft:#1B2A40;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+  a{color:var(--blue)}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) a{color:#8FB3E8} }
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+  /* Kopfbereich */
+  .hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-2) 100%);color:#fff;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-80px;top:-60px;width:420px;height:480px;opacity:.07;
+    background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpolygon points='128,8 232,68 232,188 128,248 24,188 24,68' fill='none' stroke='%23fff' stroke-width='10'/%3E%3C/svg%3E")}
+  .hero .wrap{padding-top:56px;padding-bottom:64px;position:relative;z-index:1}
+  .eyebrow{display:inline-block;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--silver)}
+  .hero h1{font-size:clamp(30px,5vw,46px);line-height:1.1;margin:10px 0 14px;font-weight:800;letter-spacing:-.02em}
+  .hero p{max-width:620px;color:#D5DDE8;font-size:17px;margin:0 0 28px}
+  .hero-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .hero crd-remote-support{font-size:16px}
+  .btn-outline{display:inline-flex;align-items:center;gap:.5em;padding:.75em 1.1em;border-radius:10px;border:1px solid rgba(255,255,255,.35);color:#fff;text-decoration:none;font-weight:600;font-size:15px}
+  .btn-outline:hover{background:rgba(255,255,255,.08)}
+
+  /* Schnellwege */
+  .quick{margin-top:-34px;position:relative;z-index:2}
+  .quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;gap:14px;align-items:flex-start;box-shadow:0 10px 30px rgba(11,37,69,.08)}
+  .q .ic{width:42px;height:42px;border-radius:10px;background:var(--blue-soft);display:flex;align-items:center;justify-content:center;flex:none;color:var(--blue)}
+  .q h3{margin:0 0 2px;font-size:16px}
+  .q p{margin:0;color:var(--muted);font-size:14px}
+
+  section{padding:56px 0 8px}
+  h2{font-size:26px;margin:0 0 6px;letter-spacing:-.01em}
+  .lead{color:var(--muted);margin:0 0 24px;max-width:680px}
+
+  /* Kacheln */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column}
+  .card .ic{width:44px;height:44px;border-radius:12px;background:var(--navy);color:var(--silver);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+  .card h3{margin:0 0 6px;font-size:17px}
+  .card p{margin:0 0 16px;color:var(--muted);font-size:14.5px;flex:1}
+  .card .act{display:flex;gap:8px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:.45em;padding:.6em .95em;border-radius:9px;background:var(--blue);color:#fff!important;text-decoration:none;font-weight:600;font-size:14px;border:0;cursor:pointer}
+  .btn:hover{background:var(--blue-h)}
+  .btn.sec{background:transparent;color:var(--blue)!important;border:1px solid var(--line)}
+  .btn.sec:hover{background:var(--blue-soft)}
+  .tag{display:inline-block;font-size:12px;font-weight:600;color:var(--blue);background:var(--blue-soft);padding:2px 8px;border-radius:999px;margin-bottom:10px;align-self:flex-start}
+
+  /* Ablauf */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:s}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;position:relative}
+  .step::before{counter-increment:s;content:counter(s);position:absolute;top:-14px;left:22px;width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .step h3{margin:6px 0 4px;font-size:16px}
+  .step p{margin:0;color:var(--muted);font-size:14.5px}
+
+  /* Produkte */
+  .products{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+  .prod{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;text-decoration:none;color:var(--ink)}
+  .prod:hover{border-color:var(--blue)}
+  .prod b{display:block;font-size:15px}
+  .prod span{font-size:13px;color:var(--muted)}
+
+  /* Sicherheit */
+  .trust{background:var(--navy);color:#fff;border-radius:18px;padding:30px;display:grid;grid-template-columns:1.1fr 1fr;gap:28px}
+  .trust h2{color:#fff}
+  .trust p{color:#D5DDE8;margin:0}
+  .trust ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+  .trust li{display:flex;gap:10px;align-items:flex-start;color:#E8EDF4;font-size:14.5px}
+  .trust li svg{flex:none;margin-top:3px;color:#8FB3E8}
+
+  /* FAQ */
+  details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:10px;padding:0 18px}
+  summary{cursor:pointer;font-weight:600;padding:16px 0;list-style:none;display:flex;justify-content:space-between;gap:12px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";color:var(--blue);font-size:20px;line-height:1}
+  details[open] summary::after{content:"–"}
+  details p{margin:0 0 16px;color:var(--muted)}
+
+  footer{margin-top:64px;border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);font-size:14px}
+  footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+  @media (max-width:900px){
+    .grid,.quick-grid,.steps{grid-template-columns:1fr 1fr}
+    .products{grid-template-columns:repeat(2,1fr)}
+    .trust{grid-template-columns:1fr}
+  }
+  @media (max-width:600px){
+    .grid,.quick-grid,.steps{grid-template-columns:1fr}
+    .hero .wrap{padding-top:40px;padding-bottom:56px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">CRDigital Support</span>
+    <h1>Wie können wir helfen?</h1>
+    <p>Fernwartung mit einem Klick, Störungen schnell melden, Anleitungen und Downloads für alle CRDigital-Produkte.</p>
+    <div class="hero-actions">
+      <crd-remote-support label="Fernwartung starten"></crd-remote-support>
+      <a class="btn-outline" href="#stoerung">Störung melden</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap quick">
+  <div class="quick-grid">
+    <div class="q">
+      <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+      <div><h3>Fernwartung</h3><p>Ohne Installation, Sie behalten die Kontrolle.</p></div>
+    </div>
+    <div class="q">
+      <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="m4 6 8 7 8-7"/></svg></div>
+      <div><h3>Per E-Mail</h3><p>Jede Meldung wird automatisch vorqualifiziert.</p></div>
+    </div>
+    <div class="q">
+      <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6z"/></svg></div>
+      <div><h3>Server in Deutschland</h3><p>Keine Vermittlung über fremde Anbieter.</p></div>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <section id="bereiche">
+    <h2>Support-Bereiche</h2>
+    <p class="lead">Wählen Sie den passenden Weg. Bei akuten Problemen ist die Fernwartung der schnellste.</p>
+    <div class="grid">
+
+      <article class="card">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4M9 10.5l2 2 4-4"/></svg></div>
+        <span class="tag">Sofort-Hilfe</span>
+        <h3>Fernwartung starten</h3>
+        <p>Programm laden, öffnen, ID und Passwort nennen. Keine Installation und keine Administratorrechte nötig.</p>
+        <div class="act"><crd-remote-support label="Jetzt starten"></crd-remote-support></div>
+      </article>
+
+      <article class="card">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></div>
+        <span class="tag">Vertragskunden</span>
+        <h3>Fernwartung dauerhaft einrichten</h3>
+        <p>Für Server und Arbeitsplätze mit Wartungsvertrag: einmal installieren, Zugriff nach Vereinbarung auch ohne Anwesenheit.</p>
+        <div class="act"><a class="btn sec" href="https://github.com/CRDigital-net/crdigital-remote/releases/download/latest/CRDigitalRemote-Setup.msi">Installationspaket (MSI)</a></div>
+      </article>
+
+      <article class="card" id="stoerung">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></div>
+        <span class="tag">Störung</span>
+        <h3>Störung melden</h3>
+        <p>Beschreiben Sie, was passiert ist. Die Meldung wird automatisch ausgewertet und landet vorbereitet beim zuständigen Techniker.</p>
+        <div class="act"><a class="btn" href="mailto:support@cr-digital.net?subject=St%C3%B6rung%3A%20&body=Produkt%2FSystem%3A%0D%0AWas%20ist%20passiert%3F%0D%0ASeit%20wann%3F%0D%0AFehlermeldung%20(gern%20als%20Screenshot)%3A%0D%0AWie%20dringend%3F%20(Arbeit%20blockiert%20%2F%20eingeschr%C3%A4nkt%20%2F%20Frage)%3A%0D%0ARückrufnummer%3A">Störung melden</a></div>
+      </article>
+
+      <article class="card">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg></div>
+        <span class="tag">Selbsthilfe</span>
+        <h3>Anleitungen &amp; FAQ</h3>
+        <p>Antworten auf häufige Fragen zur Fernwartung und zu unseren Produkten. Weitere Anleitungen folgen laufend.</p>
+        <div class="act"><a class="btn sec" href="#faq">Zu den Fragen</a></div>
+      </article>
+
+      <article class="card">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></div>
+        <span class="tag">Downloads</span>
+        <h3>Downloads</h3>
+        <p>Aktuelle Programme für Windows. Der Quellcode der Fernwartung ist öffentlich einsehbar.</p>
+        <div class="act">
+          <a class="btn sec" href="https://github.com/CRDigital-net/crdigital-remote/releases/download/latest/CRDigitalRemote-Support.exe">Support (EXE)</a>
+          <a class="btn sec" href="https://github.com/CRDigital-net/crdigital-remote">Quellcode</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <span class="tag">Allgemein</span>
+        <h3>Fragen &amp; Anfragen</h3>
+        <p>Lizenzen, Angebote, Schulungen oder Erweiterungen: schreiben Sie uns, wir melden uns zeitnah.</p>
+        <div class="act"><a class="btn sec" href="mailto:info@cr-digital.net?subject=Anfrage">Anfrage senden</a></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="ablauf">
+    <h2>So läuft die Fernwartung ab</h2>
+    <p class="lead">In unter einer Minute verbunden, ohne Vorkenntnisse.</p>
+    <div class="steps">
+      <div class="step"><h3>Programm öffnen</h3><p>Auf „Fernwartung starten“ klicken und die geladene Datei öffnen.</p></div>
+      <div class="step"><h3>ID &amp; Passwort nennen</h3><p>Das Programm zeigt eine ID und ein Passwort. Diese teilen Sie Ihrem Techniker mit.</p></div>
+      <div class="step"><h3>Verbindung bestätigen</h3><p>Sie sehen jederzeit, was passiert, und können die Sitzung mit einem Klick beenden.</p></div>
+    </div>
+  </section>
+
+  <section id="produkte">
+    <h2>Support nach Produkt</h2>
+    <p class="lead">Ihre Meldung geht direkt an die richtige Stelle.</p>
+    <div class="products">
+      <a class="prod" href="mailto:support@cr-digital.net?subject=Support%20ProtoKI"><b>ProtoKI</b><span>Protokolle &amp; Transkription</span></a>
+      <a class="prod" href="mailto:support@cr-digital.net?subject=Support%20Terravo"><b>Terravo</b><span>Liegenschaften</span></a>
+      <a class="prod" href="mailto:support@cr-digital.net?subject=Support%20CRDigital%20DMS"><b>CRDigital DMS</b><span>Dokumente</span></a>
+      <a class="prod" href="mailto:support@cr-digital.net?subject=Support%20CRDigital%20Finance"><b>CRDigital Finance</b><span>Buchhaltung</span></a>
+      <a class="prod" href="mailto:support@cr-digital.net?subject=Support%20IT-Infrastruktur"><b>IT-Infrastruktur</b><span>grommunio, Proxmox, Nextcloud</span></a>
+    </div>
+  </section>
+
+  <section id="sicherheit">
+    <div class="trust">
+      <div>
+        <h2>Sicherheit bei der Fernwartung</h2>
+        <p>Gerade für Verwaltungen zählt, wer wann worauf zugreift. Deshalb betreiben wir die Fernwartung vollständig selbst.</p>
+      </div>
+      <ul>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Vermittlungsserver in Deutschland, betrieben von CRDigital</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Ende-zu-Ende-verschlüsselte Verbindung</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Zugriff nur mit ID und Passwort von Ihrem Bildschirm</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Quelloffen und nachprüfbar (AGPL-3.0)</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Auftragsverarbeitungsvertrag auf Anfrage</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="faq">
+    <h2>Häufige Fragen</h2>
+        <details><summary>Muss ich etwas installieren?</summary><p>Nein. Für spontane Hilfe reicht das Programm „CRDigitalRemote-Support.exe“. Es läuft ohne Installation und lässt sich nach der Sitzung einfach löschen.</p></details>
+    <details><summary>Windows warnt beim Öffnen. Ist das normal?</summary><p>Ja, Windows SmartScreen warnt bei neuen Programmen. Klicken Sie auf „Weitere Informationen“ und dann „Trotzdem ausführen“. Im Zweifel fragen Sie uns vorher.</p></details>
+    <details><summary>Kann der Techniker ohne mein Wissen zugreifen?</summary><p>Bei der Sofort-Hilfe nicht: Ohne die ID und das Passwort, die nur auf Ihrem Bildschirm stehen, ist keine Verbindung möglich. Sobald Sie das Programm schließen, ist kein Zugriff mehr möglich. Dauerhafter Zugriff wird nur bei Vertragskunden nach schriftlicher Vereinbarung eingerichtet.</p></details>
+    <details><summary>Wie beende ich die Sitzung?</summary><p>Über „Trennen“ im Programmfenster oder durch Schließen des Programms. Die Verbindung ist dann sofort beendet.</p></details>
+    <details><summary>Funktioniert das auch am Mac oder Smartphone?</summary><p>Aktuell bieten wir die Fernwartung für Windows an. Für andere Systeme melden Sie sich bitte per E-Mail, wir finden eine Lösung.</p></details>
+    <details><summary>Werden Sitzungen aufgezeichnet?</summary><p>Nein, Bildschirminhalte werden nicht aufgezeichnet.</p></details>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© CRDigital · cr-digital.net</span>
+    <span>Fernwartung auf Basis von RustDesk (AGPL-3.0)</span>
+  </div>
+</footer>
+</body>
+</html>
