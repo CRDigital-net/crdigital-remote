@@ -33,6 +33,7 @@ IMG="/var/lib/vz/template/iso/noble-server-cloudimg-amd64.img"
 # -----------------------------------------------------------------------------
 
 die() { echo "FEHLER: $*" >&2; exit 1; }
+trap 'echo "FEHLER: Abbruch in Zeile $LINENO (Befehl: $BASH_COMMAND)" >&2' ERR
 command -v qm >/dev/null || die "Bitte auf einem Proxmox-Knoten ausführen."
 [ "$(id -u)" -eq 0 ] || die "Bitte als root ausführen."
 [[ "$IP" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]] || die "Ungültige IP: $IP"
@@ -63,7 +64,7 @@ else
 fi
 
 echo "== 3/6 Ablage für die Starteinrichtung (Snippets)"
-SNIP_STORE="$(pvesm status --content snippets 2>/dev/null | awk 'NR>1 && $3=="active"{print $1; exit}')"
+SNIP_STORE="$(pvesm status --content snippets 2>/dev/null | awk 'NR>1 && $3=="active" && !f {print $1; f=1}' || true)"
 if [ -z "$SNIP_STORE" ]; then
   CUR="$(pvesh get /storage/local --output-format json | python3 -c 'import sys,json; print(json.load(sys.stdin)["content"])')"
   pvesm set local --content "$CUR,snippets"
@@ -74,11 +75,11 @@ SNIP_PATH="$(pvesh get "/storage/$SNIP_STORE" --output-format json | python3 -c 
 mkdir -p "$SNIP_PATH"
 SNIP_FILE="crd-remote-$VMID.yaml"
 
-PASS="$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 20)"
+PASS="$(openssl rand -hex 10)"
 HASH="$(openssl passwd -6 "$PASS")"
 KEYS=""
 if [ -s /root/.ssh/authorized_keys ]; then
-  KEYS="$(grep -E '^(ssh-|ecdsa-|sk-)' /root/.ssh/authorized_keys | sed 's/^/      - /')"
+  KEYS="$(grep -E '^(ssh-|ecdsa-|sk-)' /root/.ssh/authorized_keys | sed 's/^/      - /' || true)"
 fi
 
 umask 077
@@ -117,7 +118,7 @@ qm create "$VMID" --name "$NAME" --ostype l26 --cores "$CORES" --memory "$MEMORY
   --description "CRDigital Remote – Vermittlungs- und Relay-Server (hbbs/hbbr). Ports TCP 21115-21117, UDP 21116." >/dev/null
 # Verzeichnis-Speicher (wie "local"): qcow2, damit Snapshots möglich bleiben
 FORMAT=""
-case "$(pvesm status --storage "$STORAGE" | awk 'NR>1{print $2}')" in dir|nfs|cifs|glusterfs|btrfs) FORMAT=",format=qcow2";; esac
+case "$(pvesm status --storage "$STORAGE" 2>/dev/null | awk 'NR>1{print $2}' || true)" in dir|nfs|cifs|glusterfs|btrfs) FORMAT=",format=qcow2";; esac
 qm set "$VMID" --scsi0 "$STORAGE:0,import-from=$IMG$FORMAT,discard=on,iothread=1,ssd=1" >/dev/null
 qm disk resize "$VMID" scsi0 "$DISK" >/dev/null
 qm set "$VMID" --ide2 "$STORAGE:cloudinit" --boot order=scsi0 \
@@ -140,7 +141,7 @@ echo
 echo "== 6/6 Ergebnis"
 out() { qm guest exec "$VMID" -- "$@" 2>/dev/null | python3 -c 'import sys,json; print(json.load(sys.stdin).get("out-data","").strip())'; }
 if [ "$ok" -eq 1 ] && [ "$(out cat /root/crd-install.exit)" = "0" ]; then
-  KEY="$(out cat /opt/crd-remote/data/id_ed25519.pub)"
+  KEY="$(out cat /opt/crd-remote/data/id_ed25519.pub || true)"
   cat <<MSG
 
 Fertig. VM $VMID ($NAME) läuft unter $IP.
