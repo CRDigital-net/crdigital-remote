@@ -6,6 +6,16 @@
 
 Eigene VM oder eigener LXC auf dem Proxmox, nicht der Proxmox-Host selbst. Ubuntu 22.04 oder 24.04, 1 vCPU, 1 GB RAM, 8 GB Platte.
 
+Am schnellsten legt ein Skript die VM auf dem Proxmox-Knoten an und richtet sie ein. Erstes Argument ist die ID einer vorhandenen VM im Zielnetz (z. B. nginx), von ihr werden Bridge und Speicher übernommen:
+
+```bash
+# auf dem Proxmox-Knoten als root
+wget https://raw.githubusercontent.com/CRDigital-net/crdigital-remote/main/server/proxmox-create-vm.sh
+bash proxmox-create-vm.sh 101 10.77.10.60
+```
+
+Von Hand auf einer vorhandenen Ubuntu-VM:
+
 ```bash
 # Ordner server/ auf die VM kopieren, dann:
 cd server && sudo ./install.sh
