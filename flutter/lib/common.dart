@@ -249,16 +249,16 @@ class MyTheme {
   MyTheme._();
 
   static const Color grayBg = Color(0xFFEFEFF2);
-  static const Color accent = Color(0xFF1F5FAD);
-  static const Color accent50 = Color(0x771F5FAD);
-  static const Color accent80 = Color(0xAA1F5FAD);
+  static const Color accent = Color(0xFF1A73FF);
+  static const Color accent50 = Color(0x771A73FF);
+  static const Color accent80 = Color(0xAA1A73FF);
   static const Color canvasColor = Color(0xFF212121);
   static const Color border = Color(0xFFCCCCCC);
   static const Color idColor = Color(0xFF00B6F0);
   static const Color darkGray = Color.fromARGB(255, 148, 148, 148);
   static const Color cmIdColor = Color(0xFF21790B);
   static const Color dark = Colors.black87;
-  static const Color button = Color(0xFF1F5FAD);
+  static const Color button = Color(0xFF1A73FF);
   static const Color hoverBorder = Color(0xFF999999);
 
   // ListTile
@@ -1321,7 +1321,7 @@ Color? _msgboxColor(String type) {
   if (type.contains("error") || type == "re-input-password") {
     return Color(0xFFE04F5F);
   }
-  return Color(0xFF1F5FAD);
+  return Color(0xFF1A73FF);
 }
 
 Widget msgboxIcon(String type) {
@@ -3061,7 +3061,8 @@ int versionCmp(String v1, String v2) {
 }
 
 String getWindowName({WindowType? overrideType}) {
-  final name = bind.mainGetAppNameSync();
+  final appName = bind.mainGetAppNameSync();
+  final name = appName == 'CRDigitalRemote' ? 'CRDigital Remote' : appName;
   switch (overrideType ?? kWindowType) {
     case WindowType.Main:
       return name;

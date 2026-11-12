@@ -8,70 +8,53 @@
 
 ## Was ist das?
 
-CRDigital Remote ist die Fernwartungslösung von [CRDigital](https://cr-digital.net) für Kommunen und Unternehmen. Alle Verbindungen laufen ausschließlich über den eigenen Server `remote.cr-digital.net` in Deutschland. Server-Adresse und Schlüssel sind fest im Programm hinterlegt: Kunden laden es herunter, starten es und nennen ID und Passwort.
+CRDigital Remote ist die Fernwartungslösung von [CRDigital](https://cr-digital.net) für Kommunen und Unternehmen. Alle Verbindungen laufen über den eigenen Server `remote.cr-digital.net` in Deutschland. Server-Adresse und Schlüssel sind fest im Programm hinterlegt: Kunden laden es herunter, öffnen es und nennen ID und Passwort am Telefon.
 
-## Aufbau des Repositorys
+## Aufbau
 
 | Ordner | Inhalt |
 |---|---|
-| `server/` | Docker Compose für den Vermittlungs- und Relay-Server |
-| `branding/` | Logo, Icons und Wortmarke (Quelldateien als SVG) |
-| `.github/workflows/crd-build.yml` | Baut den Windows-Client (x64) |
-| `integration/` | Fernwartungs-Button für alle CRDigital-Anwendungen (eine Zeile HTML) |
-| `web/support/` | Support-Seite für cr-digital.net |
-| übrige Ordner | Quellcode des Clients (basiert auf RustDesk) |
+| `server/` | Vermittlungs- und Relay-Server: `install.sh`, `docker-compose.yml`, `backup-key.sh` |
+| `.github/workflows/crd-build.yml` | Baut den Windows-Client (x64) als EXE und MSI |
+| `integration/` | Fernwartungs-Knopf für alle CRDigital-Anwendungen (eine Zeile HTML) |
+| `branding/` | Logo und Icons |
+| `docs/BETRIEB.md` | Betriebshandbuch: Inbetriebnahme, Alltag, neue Version, Störungen |
+| übrige Ordner | Quellcode des Clients (basiert auf RustDesk 1.5.1) |
 
-## 1. Server einrichten
+Die Support-Seiten der Website liegen im Repository `crdigital-web` (`site/pages/support*.html`).
 
-Auf einem Linux-System mit Docker (z. B. LXC/VM auf Proxmox):
+## Inbetriebnahme in fünf Schritten
 
-```bash
-mkdir -p /opt/crd-remote && cd /opt/crd-remote
-# server/docker-compose.yml hierher kopieren
-docker compose up -d
-cat data/id_ed25519.pub   # öffentlicher Schlüssel
-```
+Ausführlich in [`docs/BETRIEB.md`](docs/BETRIEB.md).
 
-Freizugebende Ports (direkt auf die VM, nicht über einen HTTP-Proxy):
+1. **Server:** eigene Ubuntu-VM, Ordner `server/` hinkopieren, `sudo ./install.sh`. Das Skript zeigt am Ende den öffentlichen Schlüssel.
+2. **Netz:** pfSense-Portweiterleitung TCP 21115–21117 und UDP 21116 auf die VM, DNS-Eintrag `remote.cr-digital.net`.
+3. **Schlüssel:** im Repository unter *Settings → Secrets and variables → Actions* das Secret `CRD_KEY` anlegen (Inhalt: der öffentliche Schlüssel). Privaten Schlüssel mit `backup-key.sh` sichern.
+4. **Build:** *Actions → „CRDigital Remote bauen“ → Run workflow*. Nach etwa einer Stunde liegen `CRDigitalRemote-Support.exe` und `CRDigitalRemote-Setup.msi` im Release `latest`.
+5. **Freigabe:** auf der Website-VM `./update-fernwartung.sh` ausführen. Erst danach liefert `cr-digital.net/download/…` die neue Version aus.
 
-| Port | Protokoll | Zweck |
-|---|---|---|
-| 21115–21117 | TCP | ID-, NAT- und Relay-Dienst |
-| 21116 | UDP | ID-Dienst |
-| 21118–21119 | TCP | nur für Web-Client |
+Ohne das Secret bricht der Build ab, damit kein Client ohne gültigen Schlüssel entsteht.
 
-DNS: A-Record `remote.cr-digital.net` auf die öffentliche IP.
+## Sicherheit
 
-> **Wichtig:** `data/id_ed25519` (privater Schlüssel) in die Datensicherung aufnehmen. Geht er verloren, müssen alle Clients neu gebaut und verteilt werden.
-
-## 2. Client bauen
-
-1. Unter *Settings → Secrets and variables → Actions* das Secret **`CRD_KEY`** anlegen, Inhalt = `id_ed25519.pub`.
-2. Unter *Actions → „CRDigital Remote bauen“ → Run workflow* den Build starten (Dauer ca. 45–60 Minuten).
-3. Ergebnis: Release **`latest`** mit `CRDigitalRemote-Support.exe` und `CRDigitalRemote-Setup.msi` unter festen Links. Für feste Versionen ein Tag `v1.0.0` pushen.
-
-Ohne gesetztes Secret bricht der Build bewusst ab, damit kein Client ohne gültigen Schlüssel entsteht.
-
-## 3. An Kunden verteilen
-
-- **Spontane Hilfe:** EXE auf `cr-digital.net/support` zum Download anbieten, keine Installation nötig.
-- **Dauerkunden:** MSI installieren, festes Passwort setzen, unbeaufsichtigter Zugriff.
-
-Unsignierte Programme lösen unter Windows eine SmartScreen-Warnung aus. Abhilfe schafft ein Code-Signing-Zertifikat.
+- Der Server läuft mit `-k _`: Er nimmt nur Clients an, die seinen Schlüssel kennen. Ein RustDesk ohne diesen Schlüssel kann ihn nicht benutzen.
+- Sitzungen sind Ende-zu-Ende-verschlüsselt. Der Relay-Server kann die Inhalte nicht lesen.
+- Der Client sucht keine Updates bei RustDesk und verweist für Datenschutz und Hilfe auf cr-digital.net.
+- Die Programme sind nicht signiert. Windows SmartScreen warnt deshalb beim ersten Start. Abhilfe schafft ein Code-Signing-Zertifikat (siehe Betriebshandbuch).
 
 ## Design
 
 | Farbe | Hex | Einsatz |
 |---|---|---|
-| Navy | `#0B2545` | Logo-Fläche, Schrift |
-| Blau | `#1F5FAD` | Akzent, Buttons |
-| Silber | `#C9D1DB` | Logo-Rahmen, Buchstaben |
+| Navy | `#0A1428` | Flächen, Kopfbereiche |
+| Blau | `#1A73FF` | Akzent, Schaltflächen |
+| Chrom | `#C7D0DD` | Linien, Nebentext auf dunkel |
 
-Logo austauschen: Dateien in `branding/` ersetzen und in die gleichnamigen Ziele unter `res/`, `flutter/assets/` und `flutter/windows/runner/resources/` kopieren.
+Logo austauschen: Dateien in `branding/` ersetzen und in die gleichnamigen Ziele unter `res/`, `flutter/assets/` und `flutter/windows/runner/resources/` kopieren. Bilddateien müssen mit `git add -f` hinzugefügt werden, weil `.gitignore` `*.png` und `*.svg` ausschließt.
 
 ## Lizenz
 
-CRDigital Remote basiert auf [RustDesk](https://github.com/rustdesk/rustdesk) und steht wie dieses unter der **AGPL-3.0** (siehe `LICENCE`). Der vollständige Quellcode inklusive aller CRDigital-Anpassungen ist in diesem Repository öffentlich verfügbar. CRDigital ist nicht mit dem RustDesk-Projekt verbunden.
+CRDigital Remote basiert auf [RustDesk](https://github.com/rustdesk/rustdesk) und steht wie dieses unter der **AGPL-3.0** (siehe `LICENCE`). Der vollständige Quellcode mit allen Anpassungen liegt öffentlich in diesem Repository. CRDigital ist nicht mit dem RustDesk-Projekt verbunden.
 
 Original-README: [`docs/README-RustDesk-original.md`](docs/README-RustDesk-original.md)
 

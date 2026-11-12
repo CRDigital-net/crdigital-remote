@@ -1,23 +1,32 @@
-# CRDigital Remote – Server (RustDesk hbbs + hbbr)
-# Start:  docker compose up -d
-# Key:    cat ./data/id_ed25519.pub   (wird beim ersten Start erzeugt)
+# CRDigital Remote – Vermittlungs- und Relay-Server (RustDesk hbbs + hbbr)
+#
+# Einrichtung:  sudo ./install.sh        (Ubuntu 22.04 / 24.04)
+# Von Hand:     docker compose up -d
+#
+# "-k _" erzwingt den Schlüssel: Nur Clients mit dem öffentlichen Schlüssel dieses
+# Servers (also nur CRDigital Remote) können den Server benutzen. Fremde RustDesk-
+# Clients werden abgewiesen.
 services:
   hbbs:
     container_name: crd-remote-hbbs
-    image: rustdesk/rustdesk-server:latest
-    command: hbbs
+    image: rustdesk/rustdesk-server:${CRD_SERVER_VERSION:-latest}
+    command: hbbs -r ${CRD_REMOTE_HOST:-remote.cr-digital.net}:21117 -k _
     volumes:
       - ./data:/root
     network_mode: host
     depends_on:
       - hbbr
     restart: unless-stopped
+    logging: &log
+      driver: json-file
+      options: { max-size: "10m", max-file: "5" }
 
   hbbr:
     container_name: crd-remote-hbbr
-    image: rustdesk/rustdesk-server:latest
-    command: hbbr
+    image: rustdesk/rustdesk-server:${CRD_SERVER_VERSION:-latest}
+    command: hbbr -k _
     volumes:
       - ./data:/root
     network_mode: host
     restart: unless-stopped
+    logging: *log
