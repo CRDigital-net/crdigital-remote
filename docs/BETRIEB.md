@@ -28,6 +28,7 @@ Das Skript installiert Docker, startet beide Dienste unter `/opt/crd-remote`, pr
 | Was | Wert |
 |---|---|
 | pfSense-Portweiterleitung auf die VM | TCP 21115–21117, UDP 21116 |
+| Proxmox-Knoten (hält die öffentliche IP) | dieselben Ports per DNAT an die pfSense (`192.168.42.2`), in `/etc/network/interfaces` neben den Regeln für 80/443 |
 | DNS | A-Eintrag `remote.cr-digital.net` → öffentliche IP |
 | Nicht über den nginx-Reverse-Proxy | Das Protokoll ist kein HTTP |
 
