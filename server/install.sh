@@ -12,8 +12,8 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 
 echo "== 1/5 Docker"
 if ! command -v docker >/dev/null; then
-  apt-get update -qq
-  apt-get install -y -qq docker.io docker-compose-v2
+  apt-get -o DPkg::Lock::Timeout=600 update -qq
+  DEBIAN_FRONTEND=noninteractive apt-get -o DPkg::Lock::Timeout=600 install -y -qq docker.io docker-compose-v2
 fi
 systemctl enable --now docker >/dev/null
 
