@@ -42,6 +42,11 @@ for _ in $(seq 1 20); do [ -s "$DIR/data/id_ed25519.pub" ] && break; sleep 1; do
 chmod 600 "$DIR/data/id_ed25519"
 
 echo "== 5/5 Prüfung"
+# Die Dienste brauchen nach dem ersten Start einige Sekunden, bis alle Ports offen sind
+for _ in $(seq 1 30); do
+  [ "$(ss -ltn | grep -cE ':(21115|21116|21117) ')" -ge 3 ] && ss -lun | grep -q ':21116 ' && break
+  sleep 1
+done
 ok=1
 for p in 21115 21116 21117; do
   if ss -ltn | grep -q ":$p "; then echo "   TCP $p lauscht"; else echo "   FEHLER: TCP $p lauscht nicht"; ok=0; fi
