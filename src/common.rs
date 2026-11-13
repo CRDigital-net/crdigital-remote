@@ -2443,7 +2443,10 @@ pub fn create_symmetric_key_msg(their_pk_b: [u8; 32]) -> (Bytes, Bytes, secretbo
 
 #[inline]
 pub fn using_public_server() -> bool {
-    crate::get_custom_rendezvous_server(get_option("custom-rendezvous-server")).is_empty()
+    config::RENDEZVOUS_SERVERS
+        .iter()
+        .any(|s| s.ends_with("rustdesk.com"))
+        && crate::get_custom_rendezvous_server(get_option("custom-rendezvous-server")).is_empty()
 }
 
 pub struct ThrottledInterval {
@@ -2492,7 +2495,26 @@ pub fn rustdesk_interval(i: Interval) -> ThrottledInterval {
     ThrottledInterval::new(i)
 }
 
+// The portable support download only accepts connections; the installed client stays full.
+#[cfg(windows)]
+fn crd_support_mode() {
+    let Ok(portable_exe) = std::env::var(PORTABLE_APPNAME_RUNTIME_ENV_KEY) else {
+        return;
+    };
+    let is_support = std::path::Path::new(&portable_exe)
+        .file_name()
+        .map_or(false, |x| x.to_string_lossy().to_lowercase().contains("support"));
+    if is_support {
+        config::HARD_SETTINGS
+            .write()
+            .unwrap()
+            .insert("conn-type".to_owned(), "incoming".to_owned());
+    }
+}
+
 pub fn load_custom_client() {
+    #[cfg(windows)]
+    crd_support_mode();
     #[cfg(debug_assertions)]
     if let Ok(data) = std::fs::read_to_string("./custom.txt") {
         read_custom_client(data.trim());

@@ -45,7 +45,7 @@ Geht der private Schlüssel verloren, müssen alle Clients neu gebaut und bei al
 
 1. GitHub: *Actions → „CRDigital Remote bauen“ → Run workflow* (rund eine Stunde).
 2. `CRDigitalRemote-Support.exe` aus dem Release `latest` auf einem Testrechner starten. Unten im Fenster muss „Bereit“ stehen.
-3. Von einem zweiten Rechner aus mit ID und Passwort verbinden.
+3. Auf dem eigenen Rechner `CRDigitalRemote-Setup.msi` installieren und von dort mit ID und Passwort verbinden.
 4. Auf der Website-VM im Ordner der Website: `./update-fernwartung.sh`. Erst jetzt bekommen Kunden die Version.
 
 ## 2. Alltag
@@ -67,7 +67,9 @@ Geht der private Schlüssel verloren, müssen alle Clients neu gebaut und bei al
 
 ### Dein eigener Arbeitsplatz
 
-Dieselbe MSI installieren. Es gibt kein getrenntes Techniker-Programm.
+`CRDigitalRemote-Setup.msi` installieren. Das installierte Programm ist der vollständige Client: Es kann andere Rechner steuern.
+
+`CRDigitalRemote-Support.exe` ist die Kundenfassung. Sie nimmt nur Verbindungen an und zeigt kein Feld zum Steuern anderer Rechner. Kunden können deinen Server damit nicht für eigene Fernzugriffe nutzen. Erkannt wird das am Dateinamen: Enthält er „Support“, startet das Programm als Kundenfassung.
 
 ## 3. Neue Version
 
